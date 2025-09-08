@@ -1,0 +1,22 @@
+body {
+	box-sizing: border-box;
+}
+
+.display {
+	box-sizing: border-box;
+	width: 320px;
+	padding: 20px;
+	border: 1px solid black;
+}
+
+.input {
+	display: flex;
+	width: 320px;
+}
+
+.input-row {
+	width: 80px;
+	text-align: center;
+	padding: 20px;
+	border: 1px solid black;
+}
