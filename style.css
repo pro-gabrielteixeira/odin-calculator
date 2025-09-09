@@ -2,11 +2,21 @@ body {
 	box-sizing: border-box;
 }
 
+.container {
+	margin: 50px auto;
+	width: 320px;
+}
+
 .display {
 	box-sizing: border-box;
 	width: 320px;
 	padding: 20px;
+	height: 60px;
 	border: 1px solid black;
+	border-radius: 5px;
+	margin-bottom: 5px;
+	text-align: right;
+	overflow-x: hidden;
 }
 
 .input {
@@ -19,4 +29,40 @@ body {
 	text-align: center;
 	padding: 20px;
 	border: 1px solid black;
+	border-radius: 5px;
+	margin: 2px;
+	text-decoration: none;
+	user-select: none;
+	background-color: rgb(184, 226, 164);
+}
+
+.input-row:hover {
+	transition: 400ms;
+	background-color: rgb(96, 163, 64);
+	cursor: pointer;
+}
+
+.input-zero {
+	flex: 1 0 auto;
+	width: 160px;
+	box-sizing: border-box;
+}
+
+.input-equal {
+	box-sizing: border-box;
+	height: 120px;
+}
+
+.side-button {
+	display: flex;
+}
+
+.right-buttons .input {
+	width: 240px;
+	flex: 1 1 auto;
+}
+
+.temp-efect {
+	transition: 200ms;
+	background-color: rgb(56, 136, 19);
 }

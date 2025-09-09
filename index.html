@@ -8,36 +8,38 @@
 </head>
 <body>
 	<div class="container">
-		<div class="display">Numbers</div>
+		<div class="display" id="my-display"></div>
 		<div class="input">
-			<div class="input-row">X²</div>
-			<div class="input-row">/</div>
-			<div class="input-row">*</div>
-			<div class="input-row">C</div>
+			<div class="input-row" id="back-space">&larr;</div>
+			<div class="input-row" id="clean">C</div>
+			<div class="input-row" id="division">&#247;</div>
+			<div class="input-row" id="multiplication">x</div>
 		</div>
 		<div class="input">
-			<div class="input-row">7</div>
-			<div class="input-row">8</div>
-			<div class="input-row">9</div>
-			<div class="input-row">-</div>
+			<div class="input-row number" id="number-seven">7</div>
+			<div class="input-row number" id="number-eight">8</div>
+			<div class="input-row number" id="number-nine">9</div>
+			<div class="input-row" id="minus">-</div>
 		</div>
 		<div class="input">
-			<div class="input-row">4</div>
-			<div class="input-row">5</div>
-			<div class="input-row">6</div>
-			<div class="input-row">+</div>
+			<div class="input-row number" id="number-four">4</div>
+			<div class="input-row number" id="number-five">5</div>
+			<div class="input-row number" id="number-six">6</div>
+			<div class="input-row" id="sum">+</div>
 		</div>
-		<div class="input">
-			<div class="input-row">1</div>
-			<div class="input-row">2</div>
-			<div class="input-row">3</div>
-			<div class="input-row">=</div>
-		</div>
-		<div class="input">
-			<div class="input-row">0</div>
-			<div class="input-row">0</div>
-			<div class="input-row">0</div>
-			<div class="input-row">.</div>
+		<div class="side-button">
+			<div class="right-buttons">	
+				<div class="input">
+					<div class="input-row number" id="number-one">1</div>
+					<div class="input-row number" id="number-two">2</div>
+					<div class="input-row number" id="number-three">3</div>
+				</div>
+				<div class="input">
+					<div class="input-row number input-zero" id="number-zero">0</div>
+					<div class="input-row" id="dot">.</div>
+				</div>
+			</div>
+			<div class="input-row input-enter" id="button-equal">=</div>
 		</div>
 	</div>
 	<script src="script.js"></script>
