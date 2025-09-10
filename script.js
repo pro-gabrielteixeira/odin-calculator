@@ -21,88 +21,68 @@ const seven = document.querySelector('#number-seven');
 const eight = document.querySelector('#number-eight');
 const nine = document.querySelector('#number-nine');
 
+
 let RESULT_FLAG = 0;
+let value = 0;
+let secValue = 0;
+let operator = '';
+
+function restartVar() {
+	value = 0;
+	secValue = 0;
+	operator = '';
+}
+
+function restartVarButValue(saveValue) {
+	value = saveValue;
+	secValue = 0;
+	operator = '';
+	return saveValue
+}
+
+function resultFlagHandler() {
+	calcDisplay.innerText = '';
+	RESULT_FLAG = 0;
+}
 
 function sumOperation() {
-	const str = calcDisplay.innerText;
-	let a = str.split('+')[0];
-	let b = str.split('+')[1];
-	return Number(a) + Number(b)
+	return restartVarButValue(Number(value) + Number(secValue));
 }
 
 function subOperation() {
-	const str = calcDisplay.innerText;
-	let a = str.split('-')[0];
-	let b = str.split('-')[1];
-	return a - b
+	return restartVarButValue(Number(value) - Number(secValue));
 }
 
 function multiOperation() {
-	const str = calcDisplay.innerText;
-	let a = str.split('x')[0];
-	let b = str.split('x')[1];
-	return a * b
+	return restartVarButValue(Number(value) * Number(secValue));
 }
 
 function divOperation() {
-	const str = calcDisplay.innerText;
-	let a = str.split('/')[0];
-	let b = str.split('/')[1];
-	return a / b
+	if (Number(secValue) === 0) {
+		RESULT_FLAG = 1;
+		restartVar();
+		return "Error";
+	}
+	return restartVarButValue(Number(value) / Number(secValue));
 }
 
-function isThereOtherOperator() {
-	let check = 0;
-	const str = calcDisplay.innerText;
-	if (str.length === 0)
-		return 0;
-	for (let i = 0; i < str.length; i++)
-		if ((str[i] > '9' || str[i] < '0') && str[i] != '.')
-			check++;
-	return check >= 1 ? 1 : 0;
-}
-
-function addSum() {
-	const str = calcDisplay.innerText;
-	if (str.length === 0)
-		return
-	if (isThereOtherOperator())
+function addOperator(oper) {
+	if (value != 0 && !RESULT_FLAG) {
 		getResult();
-	calcDisplay.innerText += '+'
+		RESULT_FLAG = 1;
+	} else {
+		value = Number(calcDisplay.innerText);
+		calcDisplay.innerText = ''
+	}
+	operator = oper
 }
 
-function addSub() {
-	const str = calcDisplay.innerText;
-	if (str.length === 0)
-		return
-	if (isThereOtherOperator())
-		getResult();
-	calcDisplay.innerText += '-'
-}
 
-function addMulti() {
-	const str = calcDisplay.innerText;
-	if (str.length === 0)
-		return
-	if (isThereOtherOperator())
-		getResult();
-	calcDisplay.innerText += 'x';
-}
-
-function addDiv() {
-	const str = calcDisplay.innerText;
-	if (str.length === 0)
-		return
-	if (isThereOtherOperator())
-		getResult();
-	calcDisplay.innerText += '/'
-}
+// Decimal (.) operations and checks
 
 function isThereADot() {
 	let checkDot = 0;
 	const str = calcDisplay.innerText;
-	if (str.length === 0)
-		return 1;
 	for (let i = 0; i < str.length; i++)
 		if (str[i] > '9' || str[i] < '0') {
 			if (str[i] === '.')
@@ -118,53 +98,63 @@ function addDot() {
 		calcDisplay.innerText += '.';
 }
 
+// Operator check
+
+function isThereOtherOperator() {
+	return operator == '' ? 0 : 1;
+}
+
+// Call Operations
+
 function callMathOperation() {
-	const str = calcDisplay.innerText;
-	if (str.length === 0)
-		return 0;
-	for (let i = 0; i < str.length; i++)
-		if (str[i] > '9' || str[i] < '0') {
-			if (str[i] === '/')
-				return divOperation();
-			if (str[i] === 'x')
-				return multiOperation();
-			if (str[i] === '-')
-				return subOperation();
-			if (str[i] === '+')
-				return sumOperation();
-		}
+	if (operator === '/')
+		return divOperation();
+	else if (operator === 'x')
+		return multiOperation();
+	else if (operator === '-')
+		return subOperation();
+	else if (operator === '+')
+		return sumOperation();
+
 }
 
 function getResult() {
-	if (isThereOtherOperator())
+	if (isThereOtherOperator()) {
+		secValue = Number(calcDisplay.innerText);
 		calcDisplay.innerText = callMathOperation();
+	}
 }
 
+// Events Handler
+
 const eventHandler = (target) => {
-	if (RESULT_FLAG) {
-		if (target.matches('.number'))
-			calcDisplay.innerText = '';
-		RESULT_FLAG = 0;
-	} 
-	if (target.matches('.number'))
+	const str = calcDisplay.innerText;
+
+	if (RESULT_FLAG)
+		resultFlagHandler();
+
+	if (target.matches('.number')) 
 		calcDisplay.innerText += target.innerText;
-	else if (target === cleanBtn)
+	else if (str.length === 0)
+		return
+	else if (target === cleanBtn) {
+		restartVar();
 		calcDisplay.innerText = '';
+	}
 	else if (target === backSpace) {
-		let str = calcDisplay.innerText;
-		str = str.split('').slice(0, -1).join('');
-		calcDisplay.innerText = str;
+		newStr = str.split('').slice(0, -1).join('');
+		calcDisplay.innerText = newStr;
 	} else if (target === sumBtn)
-		addSum();
+		addOperator('+');
 	else if (target === minusBtn)
-		addSub();
+		addOperator('-');
 	else if (target === multiBtn)
-		addMulti();
+		addOperator('x');
 	else if (target === divisionBtn)
-		addDiv()
+		addOperator('/')
 	else if (target === equalBtn) {
-		RESULT_FLAG = 1;
 		getResult();
+		// RESULT_FLAG = 1;
 	}
 	else if (target === dotBtn)
 		addDot();
