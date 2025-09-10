@@ -23,21 +23,22 @@ const nine = document.querySelector('#number-nine');
 
 
 let RESULT_FLAG = 0;
-let value = 0;
-let secValue = 0;
+let value = NaN;
+let secValue = NaN;
 let operator = '';
 
 function restartVar() {
-	value = 0;
-	secValue = 0;
+	value = NaN;
+	secValue = NaN;
 	operator = '';
 }
 
 function restartVarButValue(saveValue) {
 	value = saveValue;
-	secValue = 0;
+	secValue = NaN;
 	operator = '';
-	return saveValue
+	RESULT_FLAG = 1;
+	return saveValue;
 }
 
 function resultFlagHandler() {
@@ -46,39 +47,48 @@ function resultFlagHandler() {
 }
 
 function sumOperation() {
-	return restartVarButValue(Number(value) + Number(secValue));
+	return parseFloat(restartVarButValue(Number(value) + Number(secValue)).toFixed(5));
 }
 
 function subOperation() {
-	return restartVarButValue(Number(value) - Number(secValue));
+	return parseFloat(restartVarButValue(Number(value) - Number(secValue)).toFixed(5));
 }
 
 function multiOperation() {
-	return restartVarButValue(Number(value) * Number(secValue));
+	return parseFloat(restartVarButValue(Number(value) * Number(secValue)).toFixed(5));
 }
 
 function divOperation() {
 	if (Number(secValue) === 0) {
-		RESULT_FLAG = 1;
 		restartVar();
+		RESULT_FLAG = 1;
 		return "Error";
 	}
-	return restartVarButValue(Number(value) / Number(secValue));
+	return parseFloat(restartVarButValue(Number(value) / Number(secValue)).toFixed(5));
 }
 
 function addOperator(oper) {
-	if (value != 0 && !RESULT_FLAG) {
-		getResult();
-		RESULT_FLAG = 1;
-	} else {
-		value = Number(calcDisplay.innerText);
-		calcDisplay.innerText = ''
+	if (calcDisplay.innerText.length === 0 || RESULT_FLAG) {
+		operator = oper
+		return
 	}
-	operator = oper
+
+	if (isNaN(value)) {
+		value = Number(calcDisplay.innerText);
+	} else if (isNaN(secValue)) {
+		secValue = Number(calcDisplay.innerText);
+	} 
+	calcDisplay.innerText = ''
+
+	if (!isNaN(value) && !isNaN(secValue) && operator != '') {
+		calcDisplay.innerText = callMathOperation();
+		if (oper == '=')
+			restartVar();
+	}
+	
+	if (oper != '=')
+		operator = oper
 }
-
-
-// Decimal (.) operations and checks
 
 function isThereADot() {
 	let checkDot = 0;
@@ -98,14 +108,6 @@ function addDot() {
 		calcDisplay.innerText += '.';
 }
 
-// Operator check
-
-function isThereOtherOperator() {
-	return operator == '' ? 0 : 1;
-}
-
-// Call Operations
-
 function callMathOperation() {
 	if (operator === '/')
 		return divOperation();
@@ -115,34 +117,30 @@ function callMathOperation() {
 		return subOperation();
 	else if (operator === '+')
 		return sumOperation();
-
 }
 
-function getResult() {
-	if (isThereOtherOperator()) {
-		secValue = Number(calcDisplay.innerText);
-		calcDisplay.innerText = callMathOperation();
-	}
-}
+function addEfect(target) {
+	target.classList.add('temp-efect');
 
-// Events Handler
+	setTimeout(() => {
+		target.classList.remove('temp-efect')
+	}, 200)
+}
 
 const eventHandler = (target) => {
 	const str = calcDisplay.innerText;
 
-	if (RESULT_FLAG)
+	if (RESULT_FLAG && target.matches('.number'))
 		resultFlagHandler();
 
 	if (target.matches('.number')) 
 		calcDisplay.innerText += target.innerText;
-	else if (str.length === 0)
-		return
 	else if (target === cleanBtn) {
 		restartVar();
 		calcDisplay.innerText = '';
 	}
 	else if (target === backSpace) {
-		newStr = str.split('').slice(0, -1).join('');
+		let newStr = str.split('').slice(0, -1).join('');
 		calcDisplay.innerText = newStr;
 	} else if (target === sumBtn)
 		addOperator('+');
@@ -151,21 +149,15 @@ const eventHandler = (target) => {
 	else if (target === multiBtn)
 		addOperator('x');
 	else if (target === divisionBtn)
-		addOperator('/')
-	else if (target === equalBtn) {
-		getResult();
-		// RESULT_FLAG = 1;
-	}
+		addOperator('/');
+	else if (target === equalBtn)
+		addOperator('=');
 	else if (target === dotBtn)
 		addDot();
 	else
 		return;
 	
-	target.classList.add('temp-efect');
-
-	setTimeout(() => {
-		target.classList.remove('temp-efect')
-	}, 200)
+	addEfect(target);
 }
 
 container.addEventListener('click', e => eventHandler(e.target))
